@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link href="calculator.css" rel="stylesheet">
+    <script src="calculator.js" defer></script>
+</head>
+<body>
+    <div id="calculator">
+        <h1>CALCULATOR</h1>
+        <div id="display"></div>
+        <div id="keypad">
+        <div class="column">
+            <button id="clear-btn" class="clear-btn">
+                <img class="clear-btn icon" src="images/delete-icon.png">
+            </button>
+            <button class="digit">7</button>
+            <button class="digit">4</button>
+            <button class="digit">1</button>
+            <button class="digit">0</button>
+        </div>
+        <div class="column">
+            <button id="backspace-btn">
+                <img class="icon" src="images/backspace-icon.png">
+            </button>
+            <button class="digit">8</button>
+            <button class="digit">5</button>
+            <button class="digit">2</button>
+            <button id="decimal-point">
+                <img class="icon" src="images/dot-icon.png">
+            </button>
+        </div>
+        <div class="column">
+            <button class="square-root operator">
+                <img class="square-root icon icon-opr" src="images/square-root-icon.png">
+            </button>
+            <button class="digit">9</button>
+            <button class="digit">6</button>
+            <button class="digit">3</button>
+            <button id="equals" class="equals">
+                <img class="icon equals" src="images/equal-icon.png">
+            </button>
+        </div>
+        <div class="column">
+            <button class="divide operator">
+                <img class="divide icon icon-opr" src="images/divide-icon.png">
+            </button>
+            <button class="multiply operator">
+                <img src="images/multiply-icon.png" value="×" class="multiply icon-opr icon" style="width: 20px; height: 20px;">
+            </button>
+            <button class="minus operator">
+                <img class="minus icon-opr icon" src="images/minus-icon.png">
+            </button>
+            <button class="plus operator grow">
+                <img class="plus icon-opr icon" src="images/plus-icon.png">
+            </button>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
