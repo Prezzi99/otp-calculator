@@ -9,12 +9,8 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
         displayData();
         return;
     }
-    else if (target.className.includes('equals')) {
-        operate(expression);
-        displayData();
-        return;
-    }
     else if (target.className.includes('operator') || target.className.includes('icon-opr')) {
+        //Don't add operator if the expression is empty or the last element (disregard spaces) is an operator.
         if (!expression) return;
         const lastChar = expression[expression.length - 2];
         if (isNaN(lastChar) && lastChar !== undefined) return;
@@ -33,19 +29,33 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
             case 'divide':
                 operator = ' ÷ ';
         }
-
+        //Execute operate() if the expression already contains two operands and an operator
         if (expression.split(' ').length == 3) {
             operate(expression);
             expression += operator;
             displayData();
             return;
         }
-        expression += operator;
+        else {
+            expression += operator;
+        }
+    }
+    else if (target.className.includes('equals')) {
+        //Don't execute operate() if expression doesn't have two operands and an operator.
+        const lastChar = expression[expression.length - 2];
+        if (isNaN(lastChar) && lastChar !== undefined) return;
+        operate(expression);
+    }
+    else if (target.className.includes('backspace-btn')) {
+        //Convert expression to an array, each character should be an array element. 
+        let expressionArry = expression.split('');
+        //Pop the last element from the array including any white space before it. 
+        expressionArry.pop();
+        if (expressionArry[expressionArry.length - 1] === ' ') expressionArry.pop();
+        expression = expressionArry.join('');
     }
 
     if (target.className == 'digit') expression += target.innerText;
-
-    // console.log(target.classList[0])
     displayData();
 });
 
@@ -55,6 +65,11 @@ function operate(problem) {
     const operand2 = +problem.split(' ')[2];
     operator = (operator == '÷') ? '/' : (operator == '×') ? '*' : operator;
     
+    if (operator == '/' && operand2 == 0) {
+        expression = "Can't divide by zero";
+        return;
+    }
+
     switch(operator) {
         case '+':
             expression = String(operand1 + operand2);
@@ -68,7 +83,12 @@ function operate(problem) {
         case '/':
             expression = String(operand1 / operand2);
     }
-    console.log(expression);
+
+    //Round the number to four decimal places if the decimal count is greater than four.
+    if (expression.includes('.')) {
+        const decimalCount = expression.split('.')[1].length;
+        expression = (decimalCount >= 4) ? Number(expression).toFixed(4) : expression;
+    }
 }
 
 function displayData() {
