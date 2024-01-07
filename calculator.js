@@ -10,10 +10,11 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
         return;
     }
     else if (target.className.includes('operator') || target.className.includes('icon-opr')) {
-        //Don't add operator if the expression is empty or the last element (disregard spaces) is an operator.
+        //Don't add operator if the expression is empty.
         if (!expression) return;
+        // Don't add operator if the last element (disregard spaces) is an operator. Include lastChar !== '.' to disregard decimal point.
         const lastChar = expression[expression.length - 2];
-        if (isNaN(lastChar) && lastChar !== undefined) return;
+        if (isNaN(lastChar) && lastChar !== undefined && lastChar !== '.') return;
         
         let operator
         switch(target.classList[0]) {
@@ -54,10 +55,23 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
         if (expressionArry[expressionArry.length - 1] === ' ') expressionArry.pop();
         expression = expressionArry.join('');
     }
+    else if (target.className.includes('decimal-point')) {
+        //Don't add decimal point if expression is empty.
+        if (!expression) return;
+        // Don't add decimal point if the last element (disregard space) is an operator
+        const lastChar = expression[expression.length - 2];
+        if (isNaN(lastChar) && lastChar !== undefined) return;
+        // Prevent user from adding multiply decimal points to a number
+        const lastNumber_isFloat = (expression.split(' ')[expression.split(' ').length - 1].includes('.')) ? true : false;
+        if (lastNumber_isFloat) return;
+        expression += '.';
+    }
 
     if (target.className == 'digit') expression += target.innerText;
     displayData();
 });
+
+// document.addEventListener()
 
 function operate(problem) {
     let operator = problem.split(' ')[1];
