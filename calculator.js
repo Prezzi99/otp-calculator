@@ -8,36 +8,7 @@ document.querySelector('#keypad').addEventListener('click', (event) => {
         expression = '';
     }
     else if (target.className.includes('operator') || target.className.includes('icon-opr')) {
-        //Don't add operator if the expression is empty.
-        if (!expression) return;
-        // Don't add operator if the last element (disregard spaces) is an operator. Include lastChar !== '.' to disregard decimal point.
-        const lastChar = expression[expression.length - 2];
-        if (isNaN(lastChar) && lastChar !== undefined && lastChar !== '.') return;
-        
-        let operator
-        switch(target.classList[0]) {
-            case 'plus':
-                operator = ' + ';
-                break
-            case 'minus':
-                operator = ' - ';
-                break
-            case 'multiply':
-                operator = ' × ';
-                break
-            case 'divide':
-                operator = ' ÷ ';
-        }
-        //Execute operate() if the expression already contains two operands and an operator
-        if (expression.split(' ').length == 3) {
-            operate(expression);
-            expression += operator;
-            displayData();
-            return;
-        }
-        else {
-            expression += operator;
-        }
+        addOperator(target, true);
     }
     else if (target.className.includes('equals')) {
         //Don't execute operate() if expression doesn't have two operands and an operator.
@@ -75,7 +46,9 @@ document.addEventListener('keyup', (event) => {
         if (isNaN(lastChar) && lastChar !== undefined) return;
         operate(expression);
     }
-    // else if ()
+    else if (key == '+' || key == '/' || key == '*' || key == '-') {
+        addOperator(key, false);
+    }
 
     displayData();
 });
@@ -131,12 +104,64 @@ function addDecimalPoint() {
 function backspace() {
     //Convert expression to an array, each character should be an array element. 
     let expressionArry = expression.split('');
-    //Pop the last element from the array including any white space before it. 
-    expressionArry.pop();
-    if (expressionArry[expressionArry.length - 1] === ' ') expressionArry.pop();
+    if (expressionArry[expressionArry.length - 1] === ' ') {
+        //Remove the operator and the spaces around it 
+        for (let i = 0; i < 3; i++) {
+            expressionArry.pop();
+        }
+    }
+    else {
+        expressionArry.pop();
+    }
     expression = expressionArry.join('');
 }
 
-function addOperator () {
+function addOperator(operator, clickEvent = true) {
+    //Don't add operator if the expression is empty.
+    if (!expression) return;
+    // Don't add operator if the last element (disregard spaces) is an operator. Include lastChar !== '.' to disregard decimal point.
+    const lastChar = expression[expression.length - 2];
+    if (isNaN(lastChar) && lastChar !== undefined && lastChar !== '.') return;
+    
+    if (clickEvent) {
+        switch(operator.classList[0]) {
+            case 'plus':
+                operator = ' + ';
+                break
+            case 'minus':
+                operator = ' - ';
+                break
+            case 'multiply':
+                operator = ' × ';
+                break
+            case 'divide':
+                operator = ' ÷ ';
+        }
+    }
+    else {
+        switch(operator) {
+            case '+':
+                operator = ' + ';
+                break
+            case '-':
+                operator = ' - ';
+                break
+            case '*':
+                operator = ' × ';
+                break
+            case '/':
+                operator = ' ÷ ';
+        }
+    }
 
+    //Execute operate() if the expression already contains two operands and an operator
+    if (expression.split(' ').length == 3) {
+        operate(expression);
+        expression += operator;
+        displayData();
+        return;
+    }
+    else {
+        expression += operator;
+    }
 }
